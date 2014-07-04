@@ -4,6 +4,11 @@ element.innerText = "Hello";
 
 var jsObjs = JSJS.Init();
 
+function foo() {
+  element.innerText = "foo";
+}
+
+var wrappedFoo = JSJS.wrapFunction({func: foo, args: null, returns: null});
 
 function objSetProperty(cx, obj, propName, strict, val) {
     switch(propName) {
@@ -21,8 +26,20 @@ function objGetProperty(propName) {
     case "tester":
         return {'type': JSJS.Types.charPtr, 'val': "hello"};
         break;
+    case "foo":
+      return  {'type': JSJS.Types.funcPtr, 'val': wrappedFoo};
+      break;
     }
     throw "Not Implemented obj prop - " + propName;
+}
+
+function objResolve(id) {
+  switch(id) {
+    case "foo":
+      return wrappedFoo;
+  }
+
+  return 1;
 }
 
 var jsObjClass = JSJS.CreateClass(JSJS['JSCLASS_GLOBAL_FLAGS'],
@@ -49,8 +66,8 @@ var wrappedCallbackObject = JSJS.wrapFunction({
 
 JSJS.DefineFunction(jsObjs.cx, jsObjs.glob, "callbackObject", wrappedCallbackObject, 1, 0);
 
-var rval = JSJS.EvaluateScript(jsObjs.cx, jsObjs.glob, "callbackObject(function(x) {x.tester = 'test'});");
+var rval = JSJS.EvaluateScript(jsObjs.cx, jsObjs.glob, "callbackObject(function(x) {x.foo()});");
 
-var val = JSJS.ValueToString(jsObjs.cs, rval);
+//var val = JSJS.ValueToString(jsObjs.cs, rval);
 
-element.innerText = val;
+//element.innerText = val;
