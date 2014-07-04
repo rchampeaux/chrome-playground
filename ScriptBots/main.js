@@ -48,7 +48,7 @@ var jsObjClass = JSJS.CreateClass(JSJS['JSCLASS_GLOBAL_FLAGS'],
         JSJS.wrapGetter(objGetProperty, JSJS.Types.charPtr),
         JSJS.wrapSetter(objSetProperty),
         JSJS['EnumerateStub'],
-        JSJS['ResolveStub'],
+        JSJS.wrapResolver(objResolve),
         JSJS['ConvertStub'],
         JSJS['FinalizeStub']);
 var jsObj = JSJS.NewObject(jsObjs.cx, jsObjClass, 0, 0);
