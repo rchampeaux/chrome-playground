@@ -1,0 +1,5 @@
+function Map() {
+  
+}
+
+Map.prototype.
