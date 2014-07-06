@@ -69,91 +69,85 @@ map.addRobot(robot);
 
 //nextCycle();
 
-function foo()
+function RobotCollision(p1, angle, distance, p2)
 {
   var radius = 20.0;
-  var angle = 45.0;
-  var x1 = 400.0;
-  var y1 = 400.0;
-  var x2 = 500.0;
-  var y2 = 460.0;
-  
-  var ctx = canvas.getContext('2d');
-  
+
   var radians = angle * (Math.PI / 180.0);
   var s = Math.sin(radians) / Math.cos(radians);
   
-  var xV = x1 + Math.cos(radians)*300;
-  var yV = y1 + Math.sin(radians)*300;
+  var v = Vector.createFromAngleDistance(angle, distance);
   
-  var xI = (y2 + (x2/s) - y1 + s*x1) / (s + (1/s));
-  var yI = -(1/s)*xI + (y2 + (x2/s));
+  var p3 = Vector.add(p1, v);
   
-  ctx.strokeStyle = "#ff0000";
-  ctx.beginPath();
-  ctx.moveTo(x1, y1);
-  ctx.lineTo(xV, yV);
-  ctx.stroke();
+  var intcp = Vector.pointLinePerpendicularIntercept(p2, p1, p3);
   
-  ctx.strokeStyle = "#0000ff";
-  ctx.beginPath();
-  ctx.moveTo(x2, y2);
-  ctx.lineTo(xI, yI);
-  ctx.stroke();
-  
-  ctx.beginPath();
-  ctx.arc(x1, y1, 3, 0, Math.PI * 2);
-  ctx.fill();
-  
-  ctx.beginPath();
-  ctx.arc(x2, y2, 3, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(xI, yI, 3, 0, Math.PI * 2);
-  ctx.fill();
-  
-  ctx.strokeStyle = "#ff0000";
-  ctx.beginPath();
-  ctx.arc(x1, y1, radius, 0, Math.PI * 2);
-  ctx.stroke();
-  
-  ctx.strokeStyle = "#0000ff";
-  ctx.beginPath();
-  ctx.arc(x2, y2, radius, 0, Math.PI * 2);
-  ctx.stroke();
-  
-  var dx2 = x2 - xI;
-  var dy2 = y2 - yI;
-  
-  var dToLineSquared = Math.pow(dx2,2) + Math.pow(dy2,2)
-  
-  var doubleRadius = radius * 2;
-  var dI = Math.sqrt(Math.pow(doubleRadius,2) - dToLineSquared);
-  
-  var dToIntercept = Math.sqrt(Math.pow(xI-x1,2) + Math.pow(yI-y1,2));
-  
-  var maxDistance = dToIntercept - dI;
-  
-  var xMax = x1 + Math.cos(radians)*maxDistance;
-  var yMax = y1 + Math.sin(radians)*maxDistance;
-  
-  ctx.beginPath();
-  ctx.arc(xMax, yMax, 3, 0, Math.PI * 2);
-  ctx.fill();
-  
-  ctx.strokeStyle = "#000000";
-  ctx.beginPath();
-  ctx.arc(xMax, yMax, radius, 0, Math.PI * 2);
-  ctx.stroke();
-}
-
-//foo();
-
-
-function Test() {
   var ctx = canvas.getContext('2d');
+  
+  ctx.strokeStyle = "#ff0000";
+  ctx.beginPath();
+  ctx.moveTo(p1.x, p1.y);
+  ctx.lineTo(p3.x, p3.y);
+  ctx.stroke();
+  
+  ctx.strokeStyle = "#0000ff";
+  ctx.beginPath();
+  ctx.moveTo(p2.x, p2.y);
+  ctx.lineTo(intcp.x, intcp.y);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.arc(p1.x, p1.y, 3, 0, Math.PI * 2);
+  ctx.fill();
+  
+  ctx.beginPath();
+  ctx.arc(p2.x, p2.y, 3, 0, Math.PI * 2);
+  ctx.fill();
 
-  var 
+  ctx.beginPath();
+  ctx.arc(intcp.x, intcp.y, 3, 0, Math.PI * 2);
+  ctx.fill();
+  
+  ctx.strokeStyle = "#ff0000";
+  ctx.beginPath();
+  ctx.arc(p1.x, p1.y, radius, 0, Math.PI * 2);
+  ctx.stroke();
+  
+  ctx.strokeStyle = "#0000ff";
+  ctx.beginPath();
+  ctx.arc(p2.x, p2.y, radius, 0, Math.PI * 2);
+  ctx.stroke();
+
+  var dToIntercept = p1.distanceToPoint(intcp);
+  if (dToIntercept < distance) {
+    var dToLine = p2.distanceToPoint(intcp);
+  
+    var doubleRadius = radius * 2;
+    var dI = Math.sqrt(Math.pow(doubleRadius,2) - Math.pow(dToLine,2));
+    
+    
+    var maxDistance = dToIntercept - dI;
+    
+    var pMax = Vector.add(p1, Vector.createFromAngleDistance(angle, maxDistance));
+    
+    
+  
+    ctx.beginPath();
+    ctx.arc(pMax.x, pMax.y, 3, 0, Math.PI * 2);
+    ctx.fill();
+    
+    ctx.strokeStyle = "#000000";
+    ctx.beginPath();
+    ctx.arc(pMax.x, pMax.y, radius, 0, Math.PI * 2);
+    ctx.stroke(); 
+  }
   
 }
+
+var angle = 15.0;
+
+var p1 = new Vector(400.0, 400.0);
+var p2 = new Vector(520.0, 400.0);
+RobotCollision(p1, angle, p2);
+
+
