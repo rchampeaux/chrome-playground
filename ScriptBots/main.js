@@ -69,8 +69,6 @@ map.addRobot(robot);
 
 //nextCycle();
 
-foo();
-
 function foo()
 {
   var radius = 20.0;
@@ -148,5 +146,14 @@ function foo()
   ctx.beginPath();
   ctx.arc(xMax, yMax, radius, 0, Math.PI * 2);
   ctx.stroke();
+}
 
+//foo();
+
+
+function Test() {
+  var ctx = canvas.getContext('2d');
+
+  var 
+  
 }
