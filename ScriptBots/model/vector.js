@@ -19,8 +19,55 @@ Vector.add = function(v1, v2) {
   return new Vector(v1.x + v2.x, v1.y + v2.y);
 }
 
+Vector.prototype.add = function(v) {
+  return new Vector(this.x + v.x, this.y + v.y);
+}
+
 Vector.prototype.length = function() {
   return Math.sqrt(this.x*this.x + this.y*this.y);
+}
+
+Vector.prototype.subtract = function(v) {
+  return new Vector(this.x - v.x, this.y - v.y);
+}
+
+Vector.prototype.normalize = function() {
+  var d = Math.sqrt(this.x*this.x + this.y*this.y);
+  return new Vector(this.x / d, this.y / d);
+}
+
+Vector.prototype.multiply = function(d) {
+  return new Vector(this.x * d, this.y * d);
+}
+
+Vector.prototype.quadrant = function() {
+  if ((this.x >= 0) && (this.y >= 0)) {
+    return 0;
+  } else if ((this.x >= 0) && (this.y <= 0)) {
+    return 3;
+  } else if ((this.x <= 0) && (this.y >= 0)) {
+    return 1;
+  } else {
+    return 2;
+  }
+}
+
+Vector.prototype.rightNormal = function() {
+  var nx = this.y;
+  var ny = this.x;
+  
+  switch(this.quadrant()) {
+    case 0:
+    case 2:
+      ny = ny * -1;
+      break;
+    case 1:
+    case 3:
+      nx = nx * -1;
+      break;
+  }
+  
+  return new Vector(nx, ny);
 }
 
 Vector.prototype.slope = function() {
@@ -31,6 +78,7 @@ Vector.prototype.slope = function() {
     return 0;
   } if (dx == 0) {
     return Infinity;
+  }
 
   return dy/dx;
 }

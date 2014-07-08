@@ -129,9 +129,20 @@ function RobotCollision(p1, angle, distance, p2)
     var maxDistance = dToIntercept - dI;
     
     var pMax = Vector.add(p1, Vector.createFromAngleDistance(angle, maxDistance));
+
+    var dRight = distance - maxDistance;
     
+    var vNormal = p2.subtract(pMax).normalize();
+    var vRight = vNormal.rightNormal();
+    vRight = vRight.multiply(dRight);
     
-  
+    var pEnd = pMax.add(vRight);
+    
+    ctx.beginPath();
+    ctx.moveTo(pMax.x, pMax.y);
+    ctx.lineTo(pEnd.x, pEnd.y);
+    ctx.stroke();
+    
     ctx.beginPath();
     ctx.arc(pMax.x, pMax.y, 3, 0, Math.PI * 2);
     ctx.fill();
@@ -148,6 +159,6 @@ var angle = 15.0;
 
 var p1 = new Vector(400.0, 400.0);
 var p2 = new Vector(520.0, 400.0);
-RobotCollision(p1, angle, p2);
+RobotCollision(p1, angle, 150.0, p2);
 
 
