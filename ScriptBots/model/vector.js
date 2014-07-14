@@ -70,7 +70,27 @@ Vector.prototype.rightNormal = function() {
   return new Vector(nx, ny);
 }
 
-Vector.prototype.slope = function() {
+Vector.prototype.slope = function(v) {
+  if (this.y == 0) {
+    return 0;
+  } if (this.x == 0) {
+    return Infinity;
+  }
+
+  return this.y/this.x;
+}
+
+Vector.prototype.inverseSlope = function(v) {
+  if (this.x == 0) {
+    return 0;
+  } if (this.y == 0) {
+    return Infinity;
+  } 
+
+  return this.x/this.y;
+}
+
+Vector.lineSlope = function(l1, l2) {
   var dx = l2.x - l1.x;
   var dy = l2.y - l1.y;
   
@@ -83,7 +103,7 @@ Vector.prototype.slope = function() {
   return dy/dx;
 }
 
-Vector.prototype.inverseSlope = function() {
+Vector.inverseLineSlope = function(l1, l2) {
   var dx = l2.x - l1.x;
   var dy = l2.y - l1.y;
   

@@ -38,10 +38,10 @@ Map.prototype.nextCycle = function() {
     var speed = robot.speed / Map.distancePerUnit;
     
     var radians = robot.heading * (Math.PI / 180.0);
-    var x = robot.x + speed * Math.cos(radians);
-    var y = robot.y + speed * Math.sin(radians);
+    var x = robot.loc.x + speed * Math.cos(radians);
+    var y = robot.loc.y + speed * Math.sin(radians);
     
-    robot.x = x;
-    robot.y = y;
+    robot.loc.x = x;
+    robot.loc.y = y;
   }
 };

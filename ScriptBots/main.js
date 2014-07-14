@@ -4,12 +4,12 @@ var canvas = document.querySelector("#map");
 
 
 function drawRobot(ctx, robot) {
-  var radius = 20.0;
+  var radius = robot.radius;
   var innerRadius = radius-2;
   
   ctx.fillStyle = "#a00000";
   ctx.beginPath();
-  ctx.arc(robot.x, robot.y, radius, 0, Math.PI * 2);
+  ctx.arc(robot.loc.x, robot.loc.y, radius, 0, Math.PI * 2);
   ctx.fill();
   
   ctx.fillStyle = "#d00000";
@@ -21,10 +21,10 @@ function drawRobot(ctx, robot) {
   var radians2 = (robot.heading + 120) * (Math.PI/180.0);
   var radians3 = (robot.heading + 240) * (Math.PI/180.0);
 
-  var x1 = robot.x + Math.cos(radians1)*innerRadius;
-  var y1 = robot.y + Math.sin(radians1)*innerRadius;
+  var x1 = robot.loc.x + Math.cos(radians1)*innerRadius;
+  var y1 = robot.loc.y + Math.sin(radians1)*innerRadius;
   ctx.moveTo(x1, y1);
-  ctx.arc(robot.x, robot.y, innerRadius, radians2, radians3);
+  ctx.arc(robot.loc.x, robot.loc.y, innerRadius, radians2, radians3);
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
@@ -32,10 +32,10 @@ function drawRobot(ctx, robot) {
   ctx.strokeStyle = "#ffffff";
   ctx.lineWidth = 4;
   ctx.beginPath();
-  ctx.moveTo(robot.x, robot.y);
+  ctx.moveTo(robot.loc.x, robot.loc.y);
   var turretRadians = robot.turretHeading * (Math.PI / 180.0);
-  ctx.lineTo(robot.x + Math.cos(turretRadians)*radius,
-             robot.y + Math.sin(turretRadians)*radius);
+  ctx.lineTo(robot.loc.x + Math.cos(turretRadians)*radius,
+             robot.loc.y + Math.sin(turretRadians)*radius);
   ctx.stroke();
 }
 
@@ -54,22 +54,61 @@ function render() {
   
 }
 
+var cycleCount = 5000;
 function nextCycle() {
   map.nextCycle();
   render();
-  window.setTimeout(nextCycle, 0);
+  cycleCount--;
+  if (cycleCount > 0) {
+    window.setTimeout(nextCycle, 0);
+  }
 }
 
-var robot = new Robot(1, 300, 300, 0);
-robot.turnSpeed = 30.0;
-robot.turretSpeed = 20.0;
-robot.speed = 30.0;
+function RobotCollision(r1, distance, r2) {
 
-map.addRobot(robot);
+  var result = Util.robotCollision(r1, distance, r2);
+  
 
-//nextCycle();
+  var ctx = canvas.getContext('2d');
+  
+  ctx.strokeStyle = "#ff0000";
+  ctx.beginPath();
+  ctx.moveTo(r1.loc.x, r1.loc.y);
+  ctx.lineTo(result.p1.x, result.p1.y);
+  ctx.lineTo(result.p2.x, result.p2.y);
+  ctx.stroke();
 
-function RobotCollision(p1, angle, distance, p2)
+  ctx.beginPath();
+  ctx.arc(r1.loc.x, r1.loc.y, 3, 0, Math.PI * 2);
+  ctx.fill();
+  
+  ctx.beginPath();
+  ctx.arc(r2.loc.x, r2.loc.y, 3, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(result.p1.x, result.p1.y, 3, 0, Math.PI * 2);
+  ctx.fill();
+  
+  ctx.strokeStyle = "#ff0000";
+  ctx.beginPath();
+  ctx.arc(r1.loc.x, r1.loc.y, r1.radius, 0, Math.PI * 2);
+  ctx.stroke();
+  
+  ctx.strokeStyle = "#0000ff";
+  ctx.beginPath();
+  ctx.arc(r2.loc.x, r2.loc.y, r2.radius, 0, Math.PI * 2);
+  ctx.stroke();
+  
+  ctx.strokeStyle = "#000000";
+  ctx.beginPath();
+  ctx.arc(result.p1.x, result.p1.y, r1.radius, 0, Math.PI * 2);
+  ctx.stroke();
+  
+}
+
+
+function OldRobotCollision(p1, angle, distance, p2)
 {
   var radius = 20.0;
 
@@ -155,10 +194,17 @@ function RobotCollision(p1, angle, distance, p2)
   
 }
 
-var angle = 15.0;
+var r1 = new Robot(1, 100.0, 100.0, 15.0);
+r1.speed = 15.0;
+var r2 = new Robot(1, 220.0, 100.0, 0.0);
+var r3 = new Robot(1, 300.0, 200.0, 0.0);
 
-var p1 = new Vector(400.0, 400.0);
-var p2 = new Vector(520.0, 400.0);
-RobotCollision(p1, angle, 150.0, p2);
+//RobotCollision(r1, 150, r2);
+
+map.addRobot(r1);
+map.addRobot(r2);
+map.addRobot(r3);
+
+nextCycle();
 
 
