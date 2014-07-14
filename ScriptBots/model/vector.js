@@ -11,6 +11,24 @@ Vector.createFromAngleDistance = function(a, d) {
   return new Vector(x,y);
 }
 
+Vector.prototype.angle = function() {
+  return Math.atan2(this.y, this.x) * 180.0 / Math.PI;
+}
+
+Vector.prototype.isForward = function(v) {
+  var a1 = this.angle();
+  var a2 = v.angle();
+  
+  var diff = Math.abs(a2 - a1);
+  diff = (diff > 180) ? 360 - diff : diff;
+  
+  return diff <= 90.0;
+}
+
+Vector.prototype.reverse = function() {
+  return new Vector(-this.x, -this.y);
+}
+
 Vector.prototype.distanceToPoint = function(p) {
   return Math.sqrt(Math.pow(p.x-this.x,2) + Math.pow(p.y-this.y,2));
 }

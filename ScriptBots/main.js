@@ -195,7 +195,7 @@ function OldRobotCollision(p1, angle, distance, p2)
 }
 
 var r1 = new Robot(1, 100.0, 100.0, 15.0);
-r1.speed = 15.0;
+r1.speed = 25.0;
 var r2 = new Robot(2, 220.0, 100.0, 0.0);
 var r3 = new Robot(3, 300.0, 200.0, 0.0);
 

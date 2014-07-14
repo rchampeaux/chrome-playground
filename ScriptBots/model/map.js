@@ -62,7 +62,7 @@ Map.prototype.moveRobot = function(robot, moveVector)
 
 Map.prototype.nextCycle = function() {
   var index;
-  for(index = 0; index < 1; index++)
+  for(index = 0; index < this.robots.length; index++)
   {
     var robot = this.robots[index];
 
