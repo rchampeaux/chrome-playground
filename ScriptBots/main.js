@@ -33,7 +33,7 @@ function drawRobot(ctx, robot) {
   ctx.lineWidth = 4;
   ctx.beginPath();
   ctx.moveTo(robot.loc.x, robot.loc.y);
-  var turretRadians = robot.turretHeading * (Math.PI / 180.0);
+  var turretRadians = (robot.heading + robot.turretHeading) * (Math.PI / 180.0);
   ctx.lineTo(robot.loc.x + Math.cos(turretRadians)*radius,
              robot.loc.y + Math.sin(turretRadians)*radius);
   ctx.stroke();
@@ -196,8 +196,8 @@ function OldRobotCollision(p1, angle, distance, p2)
 
 var r1 = new Robot(1, 100.0, 100.0, 15.0);
 r1.speed = 15.0;
-var r2 = new Robot(1, 220.0, 100.0, 0.0);
-var r3 = new Robot(1, 300.0, 200.0, 0.0);
+var r2 = new Robot(2, 220.0, 100.0, 0.0);
+var r3 = new Robot(3, 300.0, 200.0, 0.0);
 
 //RobotCollision(r1, 150, r2);
 
