@@ -11,26 +11,22 @@ Vector.createFromAngleDistance = function(a, d) {
   return new Vector(x,y);
 }
 
-Vector.prototype.angle = function() {
-  return Math.atan2(this.y, this.x) * 180.0 / Math.PI;
-}
-
-Vector.prototype.isForward = function(v) {
-  var a1 = this.angle();
-  var a2 = v.angle();
-  
-  var diff = Math.abs(a2 - a1);
-  diff = (diff > 180) ? 360 - diff : diff;
-  
-  return diff <= 90.0;
-}
-
-Vector.prototype.reverse = function() {
-  return new Vector(-this.x, -this.y);
-}
-
 Vector.prototype.distanceToPoint = function(p) {
   return Math.sqrt(Math.pow(p.x-this.x,2) + Math.pow(p.y-this.y,2));
+}
+
+Vector.prototype.isBetween = function(p1, p2) {
+  var crossproduct = (this.y - p1.y)*(p2.x-p1.x) - (this.x - a.x)*(p2.y-p1.y);
+  if (abs(crossProduct) > Number.EPSILON) {
+    return false;
+  }
+  
+  var dotproduct = (this.x - p1.x)*(p2.x-p1.x) + (this.y-p1.y)*(p2.y-p1.y);
+  if (dotproduct < 0) {
+    return false;
+  }
+  
+  return dotproduct <= Math.pow(p2.x-p1.x) + Math.pow(p2.y-p1.y);
 }
 
 Vector.add = function(v1, v2) {
@@ -85,7 +81,8 @@ Vector.prototype.rightNormal = function() {
       break;
   }
   
-  return new Vector(nx, ny);
+  var d = Math.sqrt(nx*nx + ny*ny);
+  return new Vector(nx / d, ny / d);
 }
 
 Vector.prototype.slope = function(v) {
